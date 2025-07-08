@@ -1,19 +1,20 @@
 # <p align="center">HMAR: Efficient <u>H</u>ierarchical <u>M</u>asked <u>A</u>uto<u>R</u>egressive Image Generation </p>
 
+<p align="center">
+  <b>Hermann Kumbong, Xian Liu, Tsung-Yi Lin, Xihui Liu, Ziwei Liu, Daniel Y Fu, Ming-Yu Liu, Christopher Re, David W. Romero</b>
+</p>
+
 <div align="center">
 
-
+[![arXiv](https://img.shields.io/badge/arXiv%20paper-2506.04421-b31b1b.svg)](https://arxiv.org/abs/2506.04421)&nbsp;
+[![huggingface weights](https://img.shields.io/badge/%F0%9F%A4%97%20Weights-nvidia/HMAR-yellow)](https://huggingface.co/nvidia/HMAR)&nbsp;
+[![Project Page](https://img.shields.io/badge/Project%20Page-NVIDIA%20Research-76B900.svg)](https://research.nvidia.com/labs/dir/hmar/)&nbsp;
 </div>
-<p align="center" style="font-size: larger;">
-  <a href="https://drive.google.com/file/d/1au_vXT7ZZeYnF6sOD00DwVyBT5NGlMFJ/view?usp=sharing">HMAR: Efficient <u>H</u>ierarchical <u>M</u>asked <u>A</u>uto<u>R</u>egressive Image Generation</a>
-</p>
 
 <figure align="center">
     <img src="assets/samples_banner_border.png" width="95%">
     <figcaption align="center"><b>HMAR Samples</b>: Class-conditional ImageNet generated samples at 256×256 and 512×512 resolutions.</figcaption>
 </figure>
-
-<br>
 
 ## Method Overview
 
@@ -116,6 +117,6 @@ We would like to acknowledge the following projects, from which code in this cod
             author    = {Kumbong, Hermann and Liu, Xian and Lin, Tsung-Yi and Liu, Xihui and Liu, Ziwei and Fu, Daniel Y and Liu, Ming-Yu and Re, Christopher and Romero, David W},
             journal   = {Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR)},
             year      = {2025},
-            url       = {TBD}
+            url       = {https://arxiv.org/abs/2506.04421}
           }
 ```

